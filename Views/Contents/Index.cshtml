@@ -1,0 +1,33 @@
+﻿@model IEnumerable<AppContent>
+<div class="mb-1">
+    @if (User.IsInRole("admin") || User.IsInRole("editör"))
+    {
+    <h2>Content Create</h2>
+   <a class="btn btn-primary" asp-action="Create">Create</a>
+    }
+</div> 
+
+<div class="d-flex flex-wrap gap-3">
+    @foreach (var content in Model)
+    {
+       
+        <div class="card" style="width: 18rem;">
+            <img src="~/img/@content.Image" class="card-img-top" alt="">
+            <div class="card-body">
+                <h5 class="card-title">@content.Title</h5>
+                <p class="card-text">@content.Body</p>
+                @if (User.Identity?.IsAuthenticated == true)      //Burada kullanıcı var mı diye bakarız sonra
+                {
+                    @if (User.IsInRole("admin"))//Kullanıcı admin ise düzenle ve sil butonu aktif olur. 
+                    {
+                        <a asp-controller="Contents" asp-action="Edit" asp-route-id="@content.Id" class="btn btn-primary">Düzenle</a>
+                        <form asp-controller="Contents" asp-action="Delete" method="post" onsubmit="return confirm('Emin misiniz?')" style="display:inline-block;">
+                            <input type="hidden" name="id" value="@content.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
