@@ -1,0 +1,58 @@
+﻿@model IEnumerable<RoleWithUsersViewModel>
+<div class="container">
+    <a class="btn btn-success mb-3 mt-2" asp-action="Create">Create Role</a>
+
+    <table class="table table-sm table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 5%;">Id</th>
+                <th style="width: 25%;">Rol Adı</th>
+                <th>Kullanıcılar</th>
+                <th style="width: 150px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4" class="text-center fst-italic text-muted">Henüz rol bulunmamaktadır.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var roleWithUsers in Model)
+                {
+                    <tr>
+                        <td>@roleWithUsers.Role.Id</td>
+                        <td>@roleWithUsers.Role.Name</td>
+                        <td>
+                            @if (roleWithUsers.Users.Any())
+                            {
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach (var user in roleWithUsers.Users)
+                                    {
+                                        <span class="badge bg-secondary">@user.UserName</span>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted fst-italic">Bu rolde hiç kullanıcı yok.</span>
+                            }
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm me-2" asp-controller="Roles" asp-action="Edit" asp-route-id="@roleWithUsers.Role.Id">Edit</a>
+                            <form asp-controller="Roles" asp-action="Delete" method="post" onsubmit="return confirm('Emin misiniz?')" style="display:inline;">
+                                <input type="hidden" name="id" value="@roleWithUsers.Role.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+
+
+</div>
